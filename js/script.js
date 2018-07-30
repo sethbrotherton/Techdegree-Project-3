@@ -94,25 +94,27 @@ activities.change(function(e) {
     activities.append(totalMessage);
   }
 });
+const paymentMethod = $('#payment');
+const paypalMethod = $('#payment [value="paypal"]');
+//const paymentMethod = document.getElementById('payment');
+const creditDiv = document.getElementById('credit-card');
+const paypalDiv = creditDiv.nextElementSibling;
+const bitcoinDiv = creditDiv.nextElementSibling.nextElementSibling;
+paypalDiv.style.display = 'none';
+bitcoinDiv.style.display = 'none';
 
-
-// if (e.target.checked == true && e.target.name == 'js-frameworks') {
-//   express.attr("disabled", true);
-// } else {
-//   express.attr("disabled", false);
-// }
-//   if (e.target.checked == true && e.target.name == 'express') {
-//     jsFrameworks.attr("disabled", true);
-//   } else {
-//     jsFrameworks.attr("disabled", false);
-//   }
-// if (e.target.checked == true && e.target.name == 'js-libs') {
-//   node.attr("disabled", true);
-// } else {
-//   node.attr("disabled", false);
-// }
-// if (e.target.checked == true && e.target.name == 'node') {
-//   jsLibraries.attr("disabled", true);
-// } else {
-//   jsLibraries.attr("disabled", false);
-// }
+paymentMethod.change(function() {
+  if (paymentMethod.val() == 'paypal') {
+    creditDiv.style.display = 'none';
+    bitcoinDiv.style.display = 'none';
+    paypalDiv.style.display = '';
+  } else if (paymentMethod.val() == 'bitcoin') {
+    paypalDiv.style.display = 'none';
+    bitcoinDiv.style.display = '';
+    creditDiv.style.display = 'none';
+  } else {
+    creditDiv.style.display = '';
+    bitcoinDiv.style.display = 'none';
+    paypalDiv.style.display = 'none';
+  }
+});
