@@ -16,10 +16,26 @@ jobTitle.change(function(){
 
 const shirtDesign = $('#design');
 const shirtColor = $('#color option');
-const colorValue = $('#color option [value="dimgrey"]');
+const cornflowerblue = $('#color [value="cornflowerblue"]');
+const darkslategrey = $('#color [value="darkslategrey"]');
+const gold = $('#color [value="gold"]');
+const tomato = $('#color [value="tomato"]');
+const steelblue = $('#color [value="steelblue"]');
+const dimgrey = $('#color [value="dimgrey"]');
+
+
 shirtDesign.change(function(){
-  if ($(this).val() == 'js puns') {
-    colorValue.style.display = 'none';
+  if (shirtDesign.val() == 'js puns') {
+    shirtColor.hide();
+    cornflowerblue.show();
+    darkslategrey.show();
+    gold.show();
+    } else if (shirtDesign.val() == 'heart js') {
+      shirtColor.hide();
+      tomato.show();
+      steelblue.show();
+      dimgrey.show();
+    }  else {
+      shirtColor.show();
     }
-  }
-});
+  });
