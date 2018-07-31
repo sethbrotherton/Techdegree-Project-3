@@ -49,6 +49,7 @@ shirtDesign.change(function(){
   const node = $('.activities [name="node"]');
 
 
+const labels = $('.activities label');
 
 
 activities.change(function(e) {
@@ -63,9 +64,30 @@ activities.change(function(e) {
       total += 100;
     }
   }
+  for (let i = 0; i < labels.length; i++) {
+    if (checkboxes[1].checked == true) {
+      labels[3].style.textDecoration = 'line-through';
+    } else {
+      labels[3].style.textDecoration = 'none';
+    }
+    if (checkboxes[3].checked == true) {
+      labels[1].style.textDecoration = 'line-through';
+    } else {
+      labels[1].style.textDecoration = 'none';
+    }
+    if (checkboxes[2].checked == true) {
+      labels[4].style.textDecoration = 'line-through';
+    } else {
+      labels[4].style.textDecoration = 'none';
+    }
+    if (checkboxes[4].checked == true) {
+      labels[2].style.textDecoration = 'line-through';
+    } else {
+      labels[2].style.textDecoration = 'none';
+    }
+  }
 
-
-   for (let i = 0; i < checkboxes.length; i++) {
+  for (let i = 0; i < checkboxes.length; i++) {
      if (checkboxes[1].checked == true) {
        express.attr("disabled", true);
      } else {
@@ -86,17 +108,15 @@ activities.change(function(e) {
      } else {
        jsLibraries.attr("disabled", false);
      }
-
    }
- //let total = 0;
   totalMessage += `<span class='total'>Total: $${total}</span>`;
   if (total > 0) {
     activities.append(totalMessage);
   }
 });
+
 const paymentMethod = $('#payment');
 const paypalMethod = $('#payment [value="paypal"]');
-//const paymentMethod = document.getElementById('payment');
 const creditDiv = document.getElementById('credit-card');
 const paypalDiv = creditDiv.nextElementSibling;
 const bitcoinDiv = creditDiv.nextElementSibling.nextElementSibling;
@@ -116,5 +136,44 @@ paymentMethod.change(function() {
     creditDiv.style.display = '';
     bitcoinDiv.style.display = 'none';
     paypalDiv.style.display = 'none';
+  }
+});
+
+const button = $('button');
+const name = $('#name');
+const ccNum = $('#cc-num');
+const zip = $('#zip');
+const cvv = $('#cvv');
+const email = $('#mail');
+
+button.click(function(e) {
+
+  if (name.val() == '') {
+    e.preventDefault();
+    console.log(`where's your name?`);
+  }
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.val() ) == false) {
+    e.preventDefault();
+    console.log(`thass not a valid email`);
+  }
+  let checkedCheckboxes = 0;
+  for (let i = 1; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked == true) {
+      checkedCheckboxes += 1;
+    }
+  }
+  if (checkedCheckboxes < 1) {
+    e.preventDefault();
+    console.log('you gotta pick a workshop, bro!');
+  }
+  if (paymentMethod.val() == 'select_method') {
+    e.preventDefault();
+    console.log(`you didn't select a payment method`);
+  }
+  if (paymentMethod.val() == 'credit card' && ((ccNum.val().length < 13 || ccNum.val().length > 16) || zip.val().length != 5 || cvv.val().length != 3)) {
+    e.preventDefault();
+    console.log('bad credit info');
+  } else {
+    console.log("good credit info");
   }
 });
