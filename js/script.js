@@ -40,13 +40,13 @@ shirtDesign.change(function(){
     }
   });
 
-  const activities = $('.activities');
-  const checkboxes = $('[type="checkbox"]');
-  const mainConference = $('.activities [name="all"]');
-  const jsFrameworks = $('.activities [name="js-frameworks"]');
-  const jsLibraries = $('.activities [name="js-libs"]');
-  const express = $('.activities [name="express"]');
-  const node = $('.activities [name="node"]');
+const activities = $('.activities');
+const checkboxes = $('[type="checkbox"]');
+const mainConference = $('.activities [name="all"]');
+const jsFrameworks = $('.activities [name="js-frameworks"]');
+const jsLibraries = $('.activities [name="js-libs"]');
+const express = $('.activities [name="express"]');
+const node = $('.activities [name="node"]');
 
 
 const labels = $('.activities label');
@@ -147,33 +147,99 @@ const cvv = $('#cvv');
 const email = $('#mail');
 
 button.click(function(e) {
+  let total = 0;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked == true) {
+      total += 100;
+    }
+  }
+  if (total == 0) {
+    e.preventDefault();
+    $('.workshop-required').remove();
+    checkboxes.css('border', '2px solid red');
+    $('<p class="workshop-required">You must select at least one workshop</p>').css('color', 'red').insertAfter(activities);
+  } else {
+    checkboxes.css('border', '');
+    $('.workshop-required').remove();
+  }
 
   if (name.val() == '') {
     e.preventDefault();
-    console.log(`where's your name?`);
+    $('.name-required').remove();
+    name.css('border', '2px solid red');
+    $('<p class="name-required">Name is required</p>').css('color', 'red').insertAfter(name);
+  } else {
+    name.css('border', '');
+    $('.name-required').remove();
   }
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.val() ) == false) {
     e.preventDefault();
-    console.log(`thass not a valid email`);
+    $('.email-required').remove();
+    email.css('border', '2px solid red');
+    $('<p class="email-required">Please enter a valid email</p>').css('color', 'red').insertAfter(email);
+  } else {
+    email.css('border', '');
+    $('.email-required').remove();
   }
-  let checkedCheckboxes = 0;
-  for (let i = 1; i < checkboxes.length; i++) {
-    if (checkboxes[i].checked == true) {
-      checkedCheckboxes += 1;
-    }
-  }
-  if (checkedCheckboxes < 1) {
-    e.preventDefault();
-    console.log('you gotta pick a workshop, bro!');
-  }
+  // let checkedCheckboxes = 0;
+  // for (let i = 1; i < checkboxes.length; i++) {
+  //   if (checkboxes[i].checked == true) {
+  //     checkedCheckboxes += 1;
+  //   }
+  //   if (checkedCheckboxes < 1) {
+  //     e.preventDefault();
+  //     $('.workshop-required').remove();
+  //     checkboxes.css('border', '2px solid red');
+  //     $('<p class="workshop-required">You must select at least one workshop</p>').css('color', 'red').insertAfter(activities);
+  //   } else {
+  //     checkboxes.css('border', '');
+  //     $('.workshop-required').remove();
+  //   }
+  //}
+
   if (paymentMethod.val() == 'select_method') {
     e.preventDefault();
-    console.log(`you didn't select a payment method`);
-  }
-  if (paymentMethod.val() == 'credit card' && ((ccNum.val().length < 13 || ccNum.val().length > 16) || zip.val().length != 5 || cvv.val().length != 3)) {
-    e.preventDefault();
-    console.log('bad credit info');
+    $('.method-required').remove();
+    paymentMethod.css('border', '2px solid red');
+    $('<p class="method-required">You must select a payment method</p>').css('color', 'red').insertAfter(paymentMethod);
   } else {
-    console.log("good credit info");
+    paymentMethod.css('border', '');
+    $('.method-required').remove();
+  }
+  // if (paymentMethod.val() == 'credit card' && ((ccNum.val().length < 13 || ccNum.val().length > 16) || zip.val().length != 5 || cvv.val().length != 3)) {
+  //   e.preventDefault();
+  //   $('.invalid-credit').remove();
+  //   $('#credit-card').css('border', '2px solid red');
+  //   $('<p class="invalid-credit">Invalid credit card information</p>').css('color', 'red').insertAfter($('#credit-card'));
+  // } else {
+  //   $('#credit-card input').css('border', '');
+  //   $('.invalid-credit').remove();
+  // }
+  if (ccNum.val().length < 13 || ccNum.val().length > 16) {
+    e.preventDefault();
+    $('.invalid-ccNum').remove();
+    ccNum.css('border', '2px solid red');
+    $('<p class="invalid-ccNum">Please enter a valid credit card number</p>').css('color', 'red').insertAfter(ccNum);
+  } else {
+    ccNum.css('border', '');
+    $('.invalid-ccNum').remove();
+  }
+  if (zip.val().length != 5) {
+    e.preventDefault();
+    $('.invalid-zip').remove();
+    zip.css('border', '2px solid red');
+    $('<p class="invalid-zip">Please enter a valid zipcode</p>').css('color', 'red').insertAfter(zip);
+  } else {
+    zip.css('border', '');
+    $('invalid-zip').remove();
+  }
+  if (cvv.val().length != 3) {
+    e.preventDefault();
+    $('.invalid-cvv').remove();
+    cvv.css('border', '2px solid red');
+    $('<p class="invalid-cvv">Please enter a valid cvv number</p>').css('color', 'red').insertAfter(cvv);
+  } else {
+    cvv.css('border', '');
+    $('invalid-cvv').remove();
   }
 });
