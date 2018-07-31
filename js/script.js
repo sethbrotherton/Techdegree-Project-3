@@ -215,7 +215,7 @@ button.click(function(e) {
   //   $('#credit-card input').css('border', '');
   //   $('.invalid-credit').remove();
   // }
-  if (ccNum.val().length < 13 || ccNum.val().length > 16) {
+  if (paymentMethod.val() == 'credit card' && (ccNum.val().length < 13 || ccNum.val().length > 16)) {
     e.preventDefault();
     $('.invalid-ccNum').remove();
     ccNum.css('border', '2px solid red');
@@ -224,7 +224,7 @@ button.click(function(e) {
     ccNum.css('border', '');
     $('.invalid-ccNum').remove();
   }
-  if (zip.val().length != 5) {
+  if (paymentMethod.val() == 'credit card' && (zip.val().length != 5)) {
     e.preventDefault();
     $('.invalid-zip').remove();
     zip.css('border', '2px solid red');
@@ -233,7 +233,7 @@ button.click(function(e) {
     zip.css('border', '');
     $('invalid-zip').remove();
   }
-  if (cvv.val().length != 3) {
+  if (paymentMethod.val() == 'credit card' && (cvv.val().length != 3)) {
     e.preventDefault();
     $('.invalid-cvv').remove();
     cvv.css('border', '2px solid red');
