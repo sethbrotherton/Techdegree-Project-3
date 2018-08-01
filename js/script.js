@@ -44,6 +44,21 @@ shirtDesign.change(function(){
     }
   });
 
+// function hideShirtColor() {
+//   if ($('#design').val() == 'js puns' || $('#design').val() == 'heart js') {
+//     $('#colors-js-puns').css('display', 'block');
+//   } else {
+//     $('#colors-js-puns').css('display', 'none');
+//   }
+// }
+// hideShirtColor();
+// const colorChoices = document.getElementById('colors-js-puns');
+// colorChoices.style.display = 'none';
+//
+// if (colorChoices.selected != false) {
+//   colorChoices.style.display = '';
+// }
+
 // variables stored of use for follinw function
 const activities = $('.activities');
 const checkboxes = $('[type="checkbox"]');
@@ -169,10 +184,8 @@ $('.container').on('submit keyup', function(e) {
   if (total == 0) {
     e.preventDefault();
     $('.workshop-required').remove();
-    checkboxes.css('border', '2px solid red');
     $('<p class="workshop-required">You must select at least one workshop</p>').css('color', 'red').insertAfter(activities);
   } else {
-    checkboxes.css('border', '');
     $('.workshop-required').remove();
   }
   // If there is no name, no submit; message appears and red border around input
@@ -206,7 +219,7 @@ $('.container').on('submit keyup', function(e) {
     $('.method-required').remove();
   }
   // If incorrect amounnt of digits in ccnum, no submit, error message, border turns red
-  if (paymentMethod.val() == 'credit card' && (ccNum.val().length < 13 || ccNum.val().length > 16)) {
+  if (paymentMethod.val() == 'credit card' && (/^\d{13,16}$/.test(ccNum.val() ) == false)) {
     e.preventDefault();
     $('.invalid-ccNum').remove();
     ccNum.css('border', '2px solid red');
@@ -226,7 +239,7 @@ $('.container').on('submit keyup', function(e) {
     $('.invalid-zip').remove();
   }
   // If ccv number not three digits, error message, no submit, red border
-  if (paymentMethod.val() == 'credit card' && (cvv.val().length != 3)) {
+  if (paymentMethod.val() == 'credit card' && (/^\d{3}$/.test(cvv.val() ) == false)) {
     $('.invalid-cvv').remove();
     e.preventDefault();
     cvv.css('border', '2px solid red');
