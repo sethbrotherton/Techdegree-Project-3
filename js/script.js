@@ -1,9 +1,13 @@
+// Selects name input and automatically places cursor in it
 const nameInput = $('#name');
 nameInput.focus();
+
+// Selects page items and stores them as variables that are of use to add other job input
 const jobTitle = $('#title');
 const otherOption = $('option[value="other"]');
 const basicInfo = document.querySelector('fieldset');
 const otherJob = $('#other-title');
+// hides the other job description input, unless other is selected in job role dropdown
 otherJob.hide();
 jobTitle.change(function(){
     if ($(this).val() == 'other') {
@@ -13,7 +17,7 @@ jobTitle.change(function(){
     }
 });
 
-
+// variables stored of use for following function
 const shirtDesign = $('#design');
 const shirtColor = $('#color option');
 const cornflowerblue = $('#color [value="cornflowerblue"]');
@@ -23,7 +27,7 @@ const tomato = $('#color [value="tomato"]');
 const steelblue = $('#color [value="steelblue"]');
 const dimgrey = $('#color [value="dimgrey"]');
 
-
+//  Depending on which shirt design is selected in dropdown, different colors will be available in next option selection
 shirtDesign.change(function(){
   if (shirtDesign.val() == 'js puns') {
     shirtColor.hide();
@@ -40,6 +44,7 @@ shirtDesign.change(function(){
     }
   });
 
+// variables stored of use for follinw function
 const activities = $('.activities');
 const checkboxes = $('[type="checkbox"]');
 const mainConference = $('.activities [name="all"]');
@@ -47,15 +52,14 @@ const jsFrameworks = $('.activities [name="js-frameworks"]');
 const jsLibraries = $('.activities [name="js-libs"]');
 const express = $('.activities [name="express"]');
 const node = $('.activities [name="node"]');
-
-
 const labels = $('.activities label');
 
-
+// the following function makes the activities section dynamic in various ways
 activities.change(function(e) {
   $('.total').remove();
   let total = 0;
   let totalMessage = '';
+  // cycles through all checkboxes, tallying the costs of them
   if (checkboxes[0].checked == true) {
     total += 200;
   }
@@ -64,6 +68,8 @@ activities.change(function(e) {
       total += 100;
     }
   }
+  // cycles through the checkboxes.  If some are checked, others are unavailable
+  // and styled to appear as such
   for (let i = 0; i < labels.length; i++) {
     if (checkboxes[1].checked == true) {
       labels[3].style.textDecoration = 'line-through';
@@ -86,7 +92,7 @@ activities.change(function(e) {
       labels[2].style.textDecoration = 'none';
     }
   }
-
+  // cycles through the checkboxes and disables the ones that occur at the same time
   for (let i = 0; i < checkboxes.length; i++) {
      if (checkboxes[1].checked == true) {
        express.attr("disabled", true);
@@ -109,20 +115,24 @@ activities.change(function(e) {
        jsLibraries.attr("disabled", false);
      }
    }
+   // Appends the total costs of selected activities to end of the div
   totalMessage += `<span class='total'>Total: $${total}</span>`;
   if (total > 0) {
     activities.append(totalMessage);
   }
 });
 
+// vara of use to the following event handler function
 const paymentMethod = $('#payment');
 const paypalMethod = $('#payment [value="paypal"]');
 const creditDiv = document.getElementById('credit-card');
 const paypalDiv = creditDiv.nextElementSibling;
 const bitcoinDiv = creditDiv.nextElementSibling.nextElementSibling;
+// Hides the paypay and bitcoin information automatically
 paypalDiv.style.display = 'none';
 bitcoinDiv.style.display = 'none';
 
+// Depending on which payment option is chosen, information/inputs appear/disappear
 paymentMethod.change(function() {
   if (paymentMethod.val() == 'paypal') {
     creditDiv.style.display = 'none';
@@ -139,6 +149,7 @@ paymentMethod.change(function() {
   }
 });
 
+// Variables of use for the following event listener function
 const button = $('button');
 const name = $('#name');
 const ccNum = $('#cc-num');
@@ -146,13 +157,15 @@ const zip = $('#zip');
 const cvv = $('#cvv');
 const email = $('#mail');
 
-button.click(function(e) {
+// Selects .container div(the main div) and adds event handler for submitting and keyup
+$('.container').on('submit keyup', function(e) {
   let total = 0;
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked == true) {
       total += 100;
     }
   }
+  // If no activities are selected, the form cannot submit, and a message appears saying why
   if (total == 0) {
     e.preventDefault();
     $('.workshop-required').remove();
@@ -162,7 +175,7 @@ button.click(function(e) {
     checkboxes.css('border', '');
     $('.workshop-required').remove();
   }
-
+  // If there is no name, no submit; message appears and red border around input
   if (name.val() == '') {
     e.preventDefault();
     $('.name-required').remove();
@@ -172,6 +185,7 @@ button.click(function(e) {
     name.css('border', '');
     $('.name-required').remove();
   }
+  // If an invalid email, no submit, message appears, input border turns red
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.val() ) == false) {
     e.preventDefault();
     $('.email-required').remove();
@@ -181,22 +195,7 @@ button.click(function(e) {
     email.css('border', '');
     $('.email-required').remove();
   }
-  // let checkedCheckboxes = 0;
-  // for (let i = 1; i < checkboxes.length; i++) {
-  //   if (checkboxes[i].checked == true) {
-  //     checkedCheckboxes += 1;
-  //   }
-  //   if (checkedCheckboxes < 1) {
-  //     e.preventDefault();
-  //     $('.workshop-required').remove();
-  //     checkboxes.css('border', '2px solid red');
-  //     $('<p class="workshop-required">You must select at least one workshop</p>').css('color', 'red').insertAfter(activities);
-  //   } else {
-  //     checkboxes.css('border', '');
-  //     $('.workshop-required').remove();
-  //   }
-  //}
-
+  // If a payment method is not selected, no submit, error message appears, select menu border turns red
   if (paymentMethod.val() == 'select_method') {
     e.preventDefault();
     $('.method-required').remove();
@@ -206,15 +205,7 @@ button.click(function(e) {
     paymentMethod.css('border', '');
     $('.method-required').remove();
   }
-  // if (paymentMethod.val() == 'credit card' && ((ccNum.val().length < 13 || ccNum.val().length > 16) || zip.val().length != 5 || cvv.val().length != 3)) {
-  //   e.preventDefault();
-  //   $('.invalid-credit').remove();
-  //   $('#credit-card').css('border', '2px solid red');
-  //   $('<p class="invalid-credit">Invalid credit card information</p>').css('color', 'red').insertAfter($('#credit-card'));
-  // } else {
-  //   $('#credit-card input').css('border', '');
-  //   $('.invalid-credit').remove();
-  // }
+  // If incorrect amounnt of digits in ccnum, no submit, error message, border turns red
   if (paymentMethod.val() == 'credit card' && (ccNum.val().length < 13 || ccNum.val().length > 16)) {
     e.preventDefault();
     $('.invalid-ccNum').remove();
@@ -224,22 +215,24 @@ button.click(function(e) {
     ccNum.css('border', '');
     $('.invalid-ccNum').remove();
   }
-  if (paymentMethod.val() == 'credit card' && (zip.val().length != 5)) {
+  // If bad zipcode, error, no submit, red border
+  if (paymentMethod.val() == 'credit card' && (/^\d{5}([\-]?\d{4})?$/.test(zip.val() ) == false)) {
     e.preventDefault();
     $('.invalid-zip').remove();
     zip.css('border', '2px solid red');
     $('<p class="invalid-zip">Please enter a valid zipcode</p>').css('color', 'red').insertAfter(zip);
   } else {
     zip.css('border', '');
-    $('invalid-zip').remove();
+    $('.invalid-zip').remove();
   }
+  // If ccv number not three digits, error message, no submit, red border
   if (paymentMethod.val() == 'credit card' && (cvv.val().length != 3)) {
-    e.preventDefault();
     $('.invalid-cvv').remove();
+    e.preventDefault();
     cvv.css('border', '2px solid red');
     $('<p class="invalid-cvv">Please enter a valid cvv number</p>').css('color', 'red').insertAfter(cvv);
   } else {
     cvv.css('border', '');
-    $('invalid-cvv').remove();
+    $('.invalid-cvv').remove();
   }
 });
