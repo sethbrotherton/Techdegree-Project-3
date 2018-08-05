@@ -28,36 +28,30 @@ const steelblue = $('#color [value="steelblue"]');
 const dimgrey = $('#color [value="dimgrey"]');
 
 //  Depending on which shirt design is selected in dropdown, different colors will be available in next option selection
-shirtDesign.change(function(){
+$('#colors-js-puns').hide();
+shirtDesign.on('change', function (e) {
   if (shirtDesign.val() == 'js puns') {
+     $('#colors-js-puns').show();
+    // tomato.hide();
+    // steelblue.hide();
+    // dimgrey.hide();
     shirtColor.hide();
     cornflowerblue.show();
     darkslategrey.show();
     gold.show();
-    } else if (shirtDesign.val() == 'heart js') {
-      shirtColor.hide();
-      tomato.show();
-      steelblue.show();
-      dimgrey.show();
-    }  else {
-      shirtColor.show();
-    }
-  });
-
-// function hideShirtColor() {
-//   if ($('#design').val() == 'js puns' || $('#design').val() == 'heart js') {
-//     $('#colors-js-puns').css('display', 'block');
-//   } else {
-//     $('#colors-js-puns').css('display', 'none');
-//   }
-// }
-// hideShirtColor();
-// const colorChoices = document.getElementById('colors-js-puns');
-// colorChoices.style.display = 'none';
-//
-// if (colorChoices.selected != false) {
-//   colorChoices.style.display = '';
-// }
+  } else if (shirtDesign.val() == 'heart js'){
+     $('#colors-js-puns').show();
+    // cornflowerblue.hide();
+    // darkslategrey.hide();
+    // gold.hide();
+    shirtColor.hide();
+    tomato.show();
+    steelblue.show();
+    dimgrey.show();
+  } else {
+    $('#colors-js-puns').hide();
+  }
+});
 
 // variables stored of use for follinw function
 const activities = $('.activities');
@@ -173,7 +167,7 @@ const cvv = $('#cvv');
 const email = $('#mail');
 
 // Selects .container div(the main div) and adds event handler for submitting and keyup
-$('.container').on('submit keyup', function(e) {
+$('.container').on('submit', function(e) {
   let total = 0;
   for (let i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked == true) {
@@ -208,6 +202,13 @@ $('.container').on('submit keyup', function(e) {
     email.css('border', '');
     $('.email-required').remove();
   }
+  // if (email.val().indexOf('@') == -1) {
+  //   e.preventDefault();
+  //   $('.at-required').remove();
+  //   $('<p class="at-required">You forgot the @ symbol</p>').css('color', 'red').insertAfter(email);
+  // } else {
+  //   $('.at-required').remove();
+  // }
   // If a payment method is not selected, no submit, error message appears, select menu border turns red
   if (paymentMethod.val() == 'select_method') {
     e.preventDefault();
@@ -240,6 +241,7 @@ $('.container').on('submit keyup', function(e) {
   }
   // If ccv number not three digits, error message, no submit, red border
   if (paymentMethod.val() == 'credit card' && (/^\d{3}$/.test(cvv.val() ) == false)) {
+
     $('.invalid-cvv').remove();
     e.preventDefault();
     cvv.css('border', '2px solid red');
@@ -249,3 +251,90 @@ $('.container').on('submit keyup', function(e) {
     $('.invalid-cvv').remove();
   }
 });
+
+// Add keyup event to Name input
+name.on('keyup', function(e) {
+  if (name.val() == '') {
+    e.preventDefault();
+    $('.name-required').remove();
+    name.css('border', '2px solid red');
+    $('<p class="name-required">Name is required</p>').css('color', 'red').insertAfter(name);
+  } else {
+    name.css('border', '');
+    $('.name-required').remove();
+  }
+});
+
+// Adds keyup lister to email input
+email.on('keyup submit', function(e) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.val() ) == false) {
+    e.preventDefault();
+    $('.email-required').remove();
+    email.css('border', '2px solid red');
+    $('<p class="email-required">Please enter a valid email</p>').css('color', 'red').insertAfter(email);
+  } else {
+    email.css('border', '');
+    $('.email-required').remove();
+  }
+});
+
+// Adds 'change' listener to workshop checkboxes
+activities.on('change', function(e){
+  let total = 0;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked == true) {
+      total += 100;
+    }
+  }
+  // If no activities are selected, the form cannot submit, and a message appears saying why
+  if (total == 0) {
+    e.preventDefault();
+    $('.workshop-required').remove();
+    $('<p class="workshop-required">You must select at least one workshop</p>').css('color', 'red').insertAfter(activities);
+  } else {
+    $('.workshop-required').remove();
+  }
+});
+
+// Added keyup listener to credit card inputs
+const creditCard = $('#credit-card');
+creditCard.on('keyup submit', function(e){
+  if (paymentMethod.val() == 'credit card' && (/^\d{13,16}$/.test(ccNum.val() ) == false)) {
+    e.preventDefault();
+    $('.invalid-ccNum').remove();
+    ccNum.css('border', '2px solid red');
+    $('<p class="invalid-ccNum">Please enter a valid credit card number</p>').css('color', 'red').insertAfter(ccNum);
+  } else {
+    ccNum.css('border', '');
+    $('.invalid-ccNum').remove();
+  }
+  // If bad zipcode, error, no submit, red border
+  if (paymentMethod.val() == 'credit card' && (/^\d{5}([\-]?\d{4})?$/.test(zip.val() ) == false)) {
+    e.preventDefault();
+    $('.invalid-zip').remove();
+    zip.css('border', '2px solid red');
+    $('<p class="invalid-zip">Please enter a valid zipcode</p>').css('color', 'red').insertAfter(zip);
+  } else {
+    zip.css('border', '');
+    $('.invalid-zip').remove();
+  }
+  // If cvv number is more or less than 3 digits, error message, no submit, red border
+  //  if (paymentMethod.val() == 'credit card' && (/^\d{3}$/.test(cvv.val() ) == false)) {
+  if (paymentMethod.val() == 'credit card' && (cvv.val().length > 3)) {
+      $('.cvvTooLong').remove();
+      $('.cvvTooShort').remove();
+      e.preventDefault();
+      cvv.css('border', '2px solid red');
+      $('<p class="cvvTooLong">There are too many digits here</p>').css('color', 'red').insertAfter(cvv);
+    } else if (paymentMethod.val() == 'credit card' && (cvv.val().length < 3)) {
+      $('cvvTooLong').remove();
+      $('.cvvTooShort').remove();
+      e.preventDefault();
+      cvv.css('border', '2px solid red');
+      $('<p class="cvvTooShort">There are too few digits here</p>').css('color', 'red').insertAfter(cvv);
+    }  else {
+      cvv.css('border', '');
+      $('.cvvTooLong').remove();
+      $('.cvvTooShort').remove();
+    }
+  });
