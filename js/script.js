@@ -31,17 +31,18 @@ const dimgrey = $('#color [value="dimgrey"]');
 $('#colors-js-puns').hide();
 shirtDesign.on('change', function (e) {
   if (shirtDesign.val() == 'js puns') {
-     $('#colors-js-puns').show();
+    $('#colors-js-puns').show();
     shirtColor.hide();
     cornflowerblue.show();
     darkslategrey.show();
     gold.show();
   } else if (shirtDesign.val() == 'heart js'){
-     $('#colors-js-puns').show();
+    $('#colors-js-puns').show();
     shirtColor.hide();
     tomato.show();
     steelblue.show();
     dimgrey.show();
+
   } else {
     $('#colors-js-puns').hide();
   }
@@ -127,10 +128,15 @@ activities.change(function(e) {
 
 // vara of use to the following event handler function
 const paymentMethod = $('#payment');
+const selectMethod = $('#payment [value="select_method"]');
 const paypalMethod = $('#payment [value="paypal"]');
 const creditDiv = document.getElementById('credit-card');
 const paypalDiv = creditDiv.nextElementSibling;
 const bitcoinDiv = creditDiv.nextElementSibling.nextElementSibling;
+
+// Removes the "select option" from payment info dropdown.  Credit card is automatically
+// selectd
+selectMethod.remove();
 // Hides the paypay and bitcoin information automatically
 paypalDiv.style.display = 'none';
 bitcoinDiv.style.display = 'none';
@@ -152,7 +158,7 @@ paymentMethod.change(function() {
   }
 });
 
-// Variables of use for the following event listener function
+// Variables of use for the following event listeners functions
 const button = $('button');
 const name = $('#name');
 const ccNum = $('#cc-num');
@@ -169,7 +175,7 @@ function unWarn(queried) {
   queried.css('border', '');
 }
 
-// // Selects .container div(the main div) and adds event handler for submitting and keyup
+// Selects .container div(the main div) and adds event handler for submitting
 $('.container').on('submit', function(e) {
   let total = 0;
   for (let i = 0; i < checkboxes.length; i++) {
@@ -235,24 +241,33 @@ $('.container').on('submit', function(e) {
     unWarn(zip);
     $('.invalid-zip').remove();
   }
-  // If cvv number is more or less than 3 digits, error message, no submit, red border
+  // If cvv number is more or less than 3 digits, or contains non-numbers -> error message, no submit, red border
   //  if (paymentMethod.val() == 'credit card' && (/^\d{3}$/.test(cvv.val() ) == false)) {
   if (paymentMethod.val() == 'credit card' && (cvv.val().length > 3)) {
       $('.cvvTooLong').remove();
       $('.cvvTooShort').remove();
+      $('.NaN').remove();
       e.preventDefault();
       warningStyle(cvv);
       $('<p class="cvvTooLong">There are too many digits here</p>').css('color', 'red').insertAfter(cvv);
     } else if (paymentMethod.val() == 'credit card' && (cvv.val().length < 3)) {
       $('cvvTooLong').remove();
       $('.cvvTooShort').remove();
+      $('.NaN').remove();
       e.preventDefault();
       warningStyle(cvv);
       $('<p class="cvvTooShort">There are too few digits here</p>').css('color', 'red').insertAfter(cvv);
+    }  else if (isNaN(cvv.val()) == true){
+      $('cvvTooLong').remove();
+      $('.cvvTooShort').remove();
+      e.preventDefault();
+      warningStyle(cvv);
+      $('<p class="NaN">Please enter numbers only</p>').css('color', 'red').insertAfter(cvv);
     }  else {
       unWarn(cvv);
       $('.cvvTooLong').remove();
       $('.cvvTooShort').remove();
+      $('.NaN').remove();
     }
 });
 
@@ -301,45 +316,60 @@ activities.on('change', function(e){
 
 });
 
-// Added keyup listener to credit card inputs
 const creditCard = $('#credit-card');
-creditCard.on('keyup', function(e){
-  if (paymentMethod.val() == 'credit card' && (/^\d{13,16}$/.test(ccNum.val() ) == false)) {
-    e.preventDefault();
-    $('.invalid-ccNum').remove();
-    warningStyle(ccNum);
-    $('<p class="invalid-ccNum">Please enter a valid credit card number</p>').css('color', 'red').insertAfter(ccNum);
-  } else {
-    unWarn(ccNum);
-    $('.invalid-ccNum').remove();
-  }
-  // If bad zipcode, error, no submit, red border
-  if (paymentMethod.val() == 'credit card' && (/^\d{5}([\-]?\d{4})?$/.test(zip.val() ) == false)) {
-    e.preventDefault();
-    $('.invalid-zip').remove();
-    warningStyle(zip);
-    $('<p class="invalid-zip">Please enter a valid zipcode</p>').css('color', 'red').insertAfter(zip);
-  } else {
-    unWarn(zip);
-    $('.invalid-zip').remove();
-  }
-  // If cvv number is more or less than 3 digits, error message, no submit, red border
-  //  if (paymentMethod.val() == 'credit card' && (/^\d{3}$/.test(cvv.val() ) == false)) {
-  if (paymentMethod.val() == 'credit card' && (cvv.val().length > 3)) {
-      $('.cvvTooLong').remove();
-      $('.cvvTooShort').remove();
+
+// Event listener for credit card number; if invalid, warning appears
+  ccNum.on('keyup', function(e){
+    if (paymentMethod.val() == 'credit card' && (/^\d{13,16}$/.test(ccNum.val() ) == false)) {
       e.preventDefault();
-      warningStyle(cvv);
-      $('<p class="cvvTooLong">There are too many digits here</p>').css('color', 'red').insertAfter(cvv);
-    } else if (paymentMethod.val() == 'credit card' && (cvv.val().length < 3)) {
-      $('cvvTooLong').remove();
-      $('.cvvTooShort').remove();
-      e.preventDefault();
-      warningStyle(cvv);
-      $('<p class="cvvTooShort">There are too few digits here</p>').css('color', 'red').insertAfter(cvv);
-    }  else {
-      unWarn(cvv);
-      $('.cvvTooLong').remove();
-      $('.cvvTooShort').remove();
+      $('.invalid-ccNum').remove();
+      warningStyle(ccNum);
+      $('<p class="invalid-ccNum">Please enter a valid credit card number</p>').css('color', 'red').insertAfter(ccNum);
+    } else {
+      unWarn(ccNum);
+      $('.invalid-ccNum').remove();
     }
   });
+
+// Event listener for zipcode; if invalid, warning appears
+  zip.on('keyup', function(e) {
+    if (paymentMethod.val() == 'credit card' && (/^\d{5}([\-]?\d{4})?$/.test(zip.val() ) == false)) {
+      e.preventDefault();
+      $('.invalid-zip').remove();
+      warningStyle(zip);
+      $('<p class="invalid-zip">Please enter a valid zipcode</p>').css('color', 'red').insertAfter(zip);
+    } else {
+      unWarn(zip);
+      $('.invalid-zip').remove();
+    }
+  });
+
+// Event listener for cvv; if invalid, warning appears
+  cvv.on('keyup', function(e) {
+    if (paymentMethod.val() == 'credit card' && (cvv.val().length > 3)) {
+        $('.cvvTooLong').remove();
+        $('.cvvTooShort').remove();
+        $('.NaN').remove();
+        e.preventDefault();
+        warningStyle(cvv);
+        $('<p class="cvvTooLong">There are too many digits here</p>').css('color', 'red').insertAfter(cvv);
+      } else if (paymentMethod.val() == 'credit card' && (cvv.val().length < 3)) {
+        $('cvvTooLong').remove();
+        $('.cvvTooShort').remove();
+        $('.NaN').remove();
+        e.preventDefault();
+        warningStyle(cvv);
+        $('<p class="cvvTooShort">There are too few digits here</p>').css('color', 'red').insertAfter(cvv);
+      }  else if (isNaN(cvv.val()) == true){
+        $('cvvTooLong').remove();
+        $('.cvvTooShort').remove();
+        e.preventDefault();
+        warningStyle(cvv);
+        $('<p class="NaN">Please enter numbers only</p>').css('color', 'red').insertAfter(cvv);
+      }  else {
+        unWarn(cvv);
+        $('.cvvTooLong').remove();
+        $('.cvvTooShort').remove();
+        $('.NaN').remove();
+      }
+    });
